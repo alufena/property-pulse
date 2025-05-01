@@ -1,4 +1,4 @@
-// pasta "app" será tratada como páginas dos componentes e api routes
+// pasta "app" será tratada como páginas dos componentes e api routes. o uso de "server components" é o padrão
 
 // export const metadata = {
 //   title: 'Test', // agora só a "home page" tem esse título, ao invés de usar só o que está definido globalmente em layout
