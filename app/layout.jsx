@@ -5,7 +5,7 @@ import Navbar from '@/components/Navbar';
 
 export const metadata = {
   // as páginas estão server side (react components no servidor), estão sendo renderizadas no server. abaixo são keywords para SEO. fazer isso aqui (layout.jsx) afeta todas as páginas do projeto
-  title: 'Impulso Imobiliário encontre o seu aluguel perfeito', // influencia a aba do navegador
+  title: 'ImobiFlux encontre o seu aluguel perfeito', // influencia a aba do navegador
   description: 'Encontre o imóvel dos seus sonhos para alugar',
   keywords:
     'rental, find rentals, find properties, aluguel, encontrar aluguéis, encontrar propriedades,',
