@@ -2,6 +2,7 @@
 
 import '@/assets/styles/globals.css'; // @ significa AT, ou seja, raiz do diretório
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 export const metadata = {
   // as páginas estão server side (react components no servidor), estão sendo renderizadas no server. abaixo são keywords para SEO. fazer isso aqui (layout.jsx) afeta todas as páginas do projeto
@@ -21,6 +22,7 @@ const MainLayout = ({
         {/* <div>Main Layout</div> */}
         <Navbar />
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

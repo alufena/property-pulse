@@ -1,7 +1,7 @@
 // "http://localhost:3000/properties" funciona sem a necessidade de definir rotas (característica SSR). a antiga estrutura de páginas (sem a pasta "app") precisaria criar um componente "properties".jsx
 
-import properties from '@/properties.json';
 import PropertyCard from '@/components/PropertyCard';
+import properties from '@/properties.json';
 
 const PropertiesPage = () => {
   return (
