@@ -1,8 +1,21 @@
-import properties from '@/properties.json';
+// import properties from '@/properties.json';
 import PropertyCard from '@/components/PropertyCard';
 import Link from 'next/link';
 
-const HomeProperties = () => {
+async function fetchProperties() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/properties`);
+    if (!res.ok) {
+      throw new Error('Algo deu errado');
+    }
+    return res.json();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const HomeProperties = async () => {
+  const properties = await fetchProperties();
   const recentProperties = properties
     .sort(() => Math.random() - Math.random())
     .slice(0, 3); // retorna apenas 3 informações do array "properties"

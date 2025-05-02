@@ -88,5 +88,5 @@ const PropertySchema = new Schema(
     }
 );
 
-const Property = models.Property || model('User', PropertySchema); // traz para outros arquivos
-export default User;
+const Property = models.Property || model('Property', PropertySchema); // traz para outros arquivos
+export default Property;
