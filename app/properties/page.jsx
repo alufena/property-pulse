@@ -1,23 +1,8 @@
-// "http://localhost:3000/properties" funciona sem a necessidade de definir rotas (característica SSR). a antiga estrutura de páginas (sem a pasta "app") precisaria criar um componente "properties".jsx
+// "http://localhost:3000/properties" funciona sem a necessidade de definir rotas (característica SSR). a antiga estrutura de páginas (sem a pasta "app") precisaria criar um componente "properties".jsx. mesmo que isso seja um server component, é possível pegar informação e carregar nessa página. caso seja um client component, seria preciso o uso de useFetch hook
 
 import PropertyCard from '@/components/PropertyCard';
 // import properties from '@/properties.json';
-
-async function fetchProperties() {
-  // isso não seria permitido em um client component, mas como aqui é um server component
-  try {
-    // const res = await fetch('http://localhost:3000/api/properties'); // por ser a partir do servidor, precisa incluir um domínio
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/properties`); // 2ª forma, mais limpa, usando env
-    if (!res.ok) {
-      throw new Error('Algo deu errado');
-    }
-    return res.json(); // caso dê certo, retorna a data diretamente dessa função
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-// mesmo que isso seja um server component, é possível pegar informação e carregar nessa página. caso seja um client component, seria preciso o uso de useFetch hook
+import { fetchProperties } from '@/utils/requests';
 
 const PropertiesPage = async () => {
   const properties = await fetchProperties(); // a variável properties agora contém data do db, que será exibida mais abaixo
