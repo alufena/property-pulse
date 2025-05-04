@@ -94,7 +94,12 @@ const PropertyAddForm = () => {
   /* !!! ESTÁ FALTANDO LOFT (SÓTÃO NO FORM ABAIXO) !!! */
   return (
     mounted && (
-      <form>
+      <form
+        action="/api/properties"
+        method="POST"
+        encType="multipart/form-data" // permite upload de imagens
+      >
+        {/* "onSubmit" seria uma alternativa ao "action" com método nessa tag form. está usando "restful routes": faz post request a "/api/properties" e cria um novo imóvel */}
         <h2 className="text-3xl text-center font-semibold mb-6">
           Adicione seu imóvel
         </h2>
@@ -121,7 +126,7 @@ const PropertyAddForm = () => {
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 font-bold mb-2">
-            Nome de exibição
+            Nome do imóvel
           </label>
           <input
             type="text"
@@ -442,12 +447,12 @@ const PropertyAddForm = () => {
         </div>
         <div className="mb-4 bg-blue-50 p-4">
           <label className="block text-gray-700 font-bold mb-2">
-            Rates (Leave blank if not applicable)
+            Preço (deixe em branco para opções não aplicáveis)
           </label>
           <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
             <div className="flex items-center">
               <label htmlFor="weekly_rate" className="mr-2">
-                Weekly
+                Semanalmente
               </label>
               <input
                 type="number"
@@ -460,7 +465,7 @@ const PropertyAddForm = () => {
             </div>
             <div className="flex items-center">
               <label htmlFor="monthly_rate" className="mr-2">
-                Monthly
+                Mensal
               </label>
               <input
                 type="number"
@@ -473,7 +478,7 @@ const PropertyAddForm = () => {
             </div>
             <div className="flex items-center">
               <label htmlFor="nightly_rate" className="mr-2">
-                Nightly
+                Noturnamente
               </label>
               <input
                 type="number"
@@ -491,14 +496,14 @@ const PropertyAddForm = () => {
             htmlFor="seller_name"
             className="block text-gray-700 font-bold mb-2"
           >
-            Seller Name
+            Seu nome
           </label>
           <input
             type="text"
             id="seller_name"
-            name="seller_info.name."
+            name="seller_info.name"
             className="border rounded w-full py-2 px-3"
-            placeholder="Name"
+            placeholder="Nome completo"
             value={fields.seller_info.name}
             onChange={handleChange}
           />
@@ -508,14 +513,14 @@ const PropertyAddForm = () => {
             htmlFor="seller_email"
             className="block text-gray-700 font-bold mb-2"
           >
-            Seller Email
+            E-mail
           </label>
           <input
             type="email"
             id="seller_email"
             name="seller_info.email"
             className="border rounded w-full py-2 px-3"
-            placeholder="Email address"
+            placeholder="Endereço de e-mail"
             required
             value={fields.seller_info.email}
             onChange={handleChange}
@@ -526,14 +531,14 @@ const PropertyAddForm = () => {
             htmlFor="seller_phone"
             className="block text-gray-700 font-bold mb-2"
           >
-            Seller Phone
+            Número de telefone
           </label>
           <input
             type="tel"
             id="seller_phone"
             name="seller_info.phone"
             className="border rounded w-full py-2 px-3"
-            placeholder="Phone"
+            placeholder="Número para contato"
             value={fields.seller_info.phone}
             onChange={handleChange}
           />
@@ -543,7 +548,7 @@ const PropertyAddForm = () => {
             htmlFor="images"
             className="block text-gray-700 font-bold mb-2"
           >
-            Images (Select up to 4 images)
+            Fotos (selecione até 4 arquivos)
           </label>
           <input
             type="file"
@@ -553,6 +558,7 @@ const PropertyAddForm = () => {
             accept="image/*"
             multiple
             onChange={handleImageChange}
+            required // atributo importante
           />
         </div>
         <div>
@@ -560,7 +566,7 @@ const PropertyAddForm = () => {
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
             type="submit"
           >
-            Add Property
+            Enviar
           </button>
         </div>
       </form>
