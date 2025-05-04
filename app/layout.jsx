@@ -3,6 +3,7 @@
 import '@/assets/styles/globals.css'; // @ significa AT, ou seja, raiz do diretório
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import AuthProvider from '@/components/AuthProvider';
 
 export const metadata = {
   // as páginas estão server side (react components no servidor), estão sendo renderizadas no server. abaixo são keywords para SEO. fazer isso aqui (layout.jsx) afeta todas as páginas do projeto
@@ -16,15 +17,16 @@ const MainLayout = ({
   children, // as páginas serão exibidas no layout através de uma prop passadas aqui como children
 }) => {
   return (
-    // envoltado em parênteses para retornar tag html
-    <html lang="en">
-      <body>
-        {/* <div>Main Layout</div> */}
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-      </body>
-    </html>
+    <AuthProvider>
+      {/* envoltado em parênteses para retornar tag html */}
+      <html lang="en">
+        <body>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </body>
+      </html>
+    </AuthProvider>
   );
 };
 

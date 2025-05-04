@@ -4,15 +4,26 @@ import logo from '@/assets/images/logo-white.png';
 import profileDefault from '@/assets/images/profile.png'; // será exibido a usuários sem foto
 import Link from 'next/link';
 import { FaGoogle } from 'react-icons/fa';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
 
 const Navbar = () => {
+  const { data: session } = useSession(); // "data: session" significa pegar "data" de "useSession" e renomeia para "session"
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // função que dá responsividade e UX ao mobile
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  // const [isLoggedIn, setLoggedIn] = useState(false);
+  const [providers, setProviders] = useState(false);
   const pathname = usePathname();
   // console.log(pathname);
+  useEffect(() => {
+    const setAuthProviders = async () => {
+      const res = await getProviders();
+      setProviders(res);
+    };
+    setAuthProviders();
+  }, []);
+  // console.log(providers);
   return (
     <nav className="bg-blue-700 border-b border-blue-500">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -55,7 +66,6 @@ const Navbar = () => {
                 src={logo}
                 alt="PropertyPulse"
               />
-
               <span className="hidden md:block text-white text-2xl font-bold ml-2">
                 ImobiFlux
               </span>
@@ -81,7 +91,8 @@ const Navbar = () => {
                 >
                   Imóveis
                 </Link>
-                {isLoggedIn && (
+                {/* {isLoggedIn && ( */}
+                {session && (
                   <Link
                     // href="/add-property.html"
                     href="/properties/add"
@@ -97,19 +108,28 @@ const Navbar = () => {
             </div>
           </div>
           {/* <!-- Right Side Menu (Logged Out) --> */}
-          {!isLoggedIn && (
+          {/* {!isLoggedIn && ( */}
+          {!session && (
             <div className="hidden md:block md:ml-6">
               <div className="flex items-center">
-                <button className="flex items-center text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
-                  {/* <i className="fa-brands fa-google text-white mr-2"></i> */}
-                  <FaGoogle className="text-white mr-2" />
-                  <span>Entrar ou cadastrar</span>
-                </button>
+                {providers &&
+                  Object.values(providers).map((provider, index) => (
+                    <button
+                      onClick={() => signIn(provider.id)} // traz o signIn de next auth
+                      key={index}
+                      className="flex items-center text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
+                    >
+                      {/* <i className="fa-brands fa-google text-white mr-2"></i> */}
+                      <FaGoogle className="text-white mr-2" />
+                      <span>Entrar ou cadastrar</span>
+                    </button>
+                  ))}
               </div>
             </div>
           )}
           {/* <!-- Right Side Menu (Logged In) --> */}
-          {isLoggedIn && (
+          {/* {isLoggedIn && ( */}
+          {session && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
               <Link href="/messages" className="relative group">
                 <button
@@ -227,7 +247,8 @@ const Navbar = () => {
             >
               Imóveis
             </Link>
-            {isLoggedIn && (
+            {/* {isLoggedIn && ( */}
+            {session && (
               <Link
                 // href="/add-property.html"
                 href="/properties/add"
@@ -239,13 +260,20 @@ const Navbar = () => {
                 Adicionar imóvel
               </Link>
             )}
-            {!isLoggedIn && (
-              <button className="flex items-center text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-4">
-                {/* <i className="fa-brands fa-google mr-2"></i> */}
-                <FaGoogle className="tex-white mr-2" />
-                <span>Entrar ou cadastrar</span>
-              </button>
-            )}
+            {/* {!isLoggedIn && ( */}
+            {!session &&
+              providers &&
+              Object.values(providers).map((provider, index) => (
+                <button
+                  onClick={() => signIn(provider.id)} // traz o signIn de next auth
+                  key={index}
+                  className="flex items-center text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-4"
+                  /* <i className="fa-brands fa-google text-white mr-2"></i> */
+                >
+                  <FaGoogle className="tex-white mr-2" />
+                  <span>Entrar ou cadastrar</span>
+                </button>
+              ))}
           </div>
         </div>
       )}
