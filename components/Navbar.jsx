@@ -4,16 +4,36 @@ import logo from '@/assets/images/logo-white.png';
 import profileDefault from '@/assets/images/profile.png'; // será exibido a usuários sem foto
 import Link from 'next/link';
 import { FaGoogle } from 'react-icons/fa';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
 
 const Navbar = () => {
-  const { data: session } = useSession(); // "data: session" significa pegar "data" de "useSession" e renomeia para "session"
+  const { data: session } = useSession(); // "data: session" significa pegar "data" de "useSession" e renomeiar para "session". sempre que quiser trazer a sessão de uma autenticação em um client side component, traga "useSession()" e o defina
+  const profileImage = session?.user?.image;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // função que dá responsividade e UX ao mobile
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   // const [isLoggedIn, setLoggedIn] = useState(false);
   const [providers, setProviders] = useState(false);
+  const menuRef = useRef(null);
+  const buttonRef = useRef(null);
+  useEffect(() => {
+    // serve para fechar o menu de perfil (dropdown) quando o usuário clica fora dele
+    const handleClickOutside = (e) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(e.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(e.target)
+      ) {
+        setIsProfileMenuOpen(false); // se o clique não foi dentro do menu (menuRef) e não foi no botão que abre o menu (buttonRef)
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside); // Quando o componente é montado, ele escuta cliques (mousedown) em toda a página
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside); // Quando o componente é desmontado, ele remove esse ouvinte, para evitar vazamentos de memória ou comportamento inesperado
+    };
+  }, []);
   const pathname = usePathname();
   // console.log(pathname);
   useEffect(() => {
@@ -24,6 +44,8 @@ const Navbar = () => {
     setAuthProviders();
   }, []);
   // console.log(providers);
+  // console.log(session); // exibe um objeto com expires e user object
+  // console.log(profileImage); // exibe a url da imagem do avatar
   return (
     <nav className="bg-blue-700 border-b border-blue-500">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -163,6 +185,7 @@ const Navbar = () => {
                 <div>
                   <button
                     type="button"
+                    ref={buttonRef}
                     className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                     id="user-menu-button"
                     aria-expanded="false"
@@ -174,8 +197,11 @@ const Navbar = () => {
                     {/* <img */}
                     <Image
                       className="h-8 w-8 rounded-full"
-                      src={profileDefault}
+                      // src={profileDefault}
+                      src={profileImage || profileDefault}
                       alt=""
+                      width={40} // 1ª parte do conserto do erro width property aqui e com "height={40}"; a parte final se encontra no arquivo "next.config.mjs"
+                      height={40}
                     />
                   </button>
                 </div>
@@ -183,6 +209,7 @@ const Navbar = () => {
                 {isProfileMenuOpen && (
                   <div
                     id="user-menu"
+                    ref={menuRef}
                     className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                     role="menu"
                     aria-orientation="vertical"
@@ -191,26 +218,36 @@ const Navbar = () => {
                   >
                     <Link
                       href="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       role="menuitem"
                       tabIndex="-1"
                       id="user-menu-item-0"
+                      onClick={() => {
+                        setIsProfileMenuOpen(false); // fecha o menu ao clicar em um item antes de redirecionar
+                      }}
                     >
                       Sua conta
                     </Link>
                     <Link
                       // href="saved-properties.html"
                       href="/properties/saved"
-                      className="block px-4 py-2 text-sm text-gray-700"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       role="menuitem"
                       tabIndex="-1"
                       id="user-menu-item-2"
+                      onClick={() => {
+                        setIsProfileMenuOpen(false);
+                      }}
                     >
                       Imóveis salvos
                     </Link>
                     <button
                       // href="#"
-                      className="block px-4 py-2 text-sm text-gray-700"
+                      onClick={() => {
+                        setIsProfileMenuOpen(false);
+                        signOut();
+                      }}
+                      className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       role="menuitem"
                       tabIndex="-1"
                       id="user-menu-item-2"
