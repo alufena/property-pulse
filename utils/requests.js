@@ -11,7 +11,7 @@ async function fetchProperties() {
             // lida a situação de quando o domínio ainda não estiver disponível
             return [];
         }
-        const res = await fetch(`${apiDomain}/properties`);
+        const res = await fetch(`${apiDomain}/properties`, { cache: 'no-store' }); // esse 2º arg "cache" serve para carregar diretamente os dados recém-enviados à página "properties/add", dispensando o uso de F5
         if (!res.ok) {
             throw new Error('Algo deu errado');
         }

@@ -26,7 +26,8 @@ const PropertyCard = ({ property }) => {
     <div className="rounded-xl shadow-md relative">
       <Image
         // src="/images/properties/a1.jpg" // adicionado "/" no início da "src". aqui é conteúdo hardcoded
-        src={`/images/properties/${property.images[0]}`} // array de imagens vindo de properties.json
+        // src={`/images/properties/${property.images[0]}`} // array de imagens vindo de properties.json
+        src={property.images[0]} // exibe as URLs vindas de cloudinary
         alt=""
         className="w-full h-auto rounded-t-xl"
         width={0} // "width", "height" e "sizes" consertam erros relacionados à substituição dessa tag "img" pelo componente "Image"
