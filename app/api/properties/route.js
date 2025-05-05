@@ -59,14 +59,13 @@ export const POST = async (request) => {
                 nightly: formData.get('rates.nightly'),
             },
             seller_info: {
-                name: formData.get('rates.name'),
-                email: formData.get('rates.email'),
-                phone: formData.get('rates.phone'),
+                name: formData.get('seller_info.name'),
+                email: formData.get('seller_info.email'),
+                phone: formData.get('seller_info.phone'),
             },
             owner: userId, // pega o usuário
             // images, // já está vindo mais acima, fora desse objeto. não será mais aqui e sim adicionado depois do upload
         };
-
         const imageUploadPromises = []; // upload de imagens ao cloudinary. o processo fica o seguinte: seleciona as imagens vindas do form, transforma em um "array buffer", pega a informação disso, faz upload para "cloudinary" que dá a resposta de volta com uma URL, coloca essa URL no array "images" e finalmente, envia para o mongodb. pode ser múltiplas URLs (múltiplos arquivos, max 4)
         for (const image of images) {
             const imageBuffer = await image.arrayBuffer();

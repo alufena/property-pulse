@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import Spinner from '@/components/Spinner';
 import { toast } from 'react-toastify';
 
-const page = () => {
+const ProfilePage = () => {
   const { data: session } = useSession();
   const profileImage = session?.user?.image;
   const profileName = session?.user?.name;
@@ -147,4 +147,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ProfilePage;

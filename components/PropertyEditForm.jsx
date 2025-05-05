@@ -95,7 +95,26 @@ const PropertyEditForm = () => {
       amenities: updatedAmenities,
     }));
   };
-  const handleSubmit = async () => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData(e.target);
+      const res = await fetch(`/api/properties/${id}`, {
+        method: 'PUT',
+        body: formData,
+      });
+      if (res.status === 200) {
+        router.push(`/properties/${id}`);
+      } else if (res.status === 401 || res.status === 403) {
+        toast.error('Algo deu errado');
+      } else {
+        toast.error('Algo deu errado');
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Algo deu errado');
+    }
+  };
   return (
     mounted &&
     !loading && (

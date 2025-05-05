@@ -10,7 +10,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import Spinner from '@/components/Spinner';
 import PropertyImages from '@/components/PropertyImages';
 
-const page = () => {
+const PropertyPage = () => {
   const { id } = useParams();
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -154,4 +154,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default PropertyPage;
