@@ -3,7 +3,7 @@ import connectDB from '@/config/database';
 import User from '@/models/User';
 
 export const authOptions = {
-    providers: [
+    providers: [ // posto aqui porque será usado em outras partes do projeto
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
