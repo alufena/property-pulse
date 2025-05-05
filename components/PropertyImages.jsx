@@ -27,7 +27,7 @@ const PropertyImages = ({ images }) => {
                     `}
               >
                 <Image
-                  src={images} // ao invés de ser a 1ª imagem, será a imagem atual da iteração map
+                  src={image} // ao invés de ser a 1ª imagem, será a imagem atual da iteração map
                   alt=""
                   className="object-cover h-[400px] w-full rounded-xl"
                   width={0}

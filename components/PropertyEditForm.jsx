@@ -1,15 +1,20 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
+import { fetchProperty } from '@/utils/requests';
 
-const PropertyAddForm = () => {
-  const [mounted, setMounted] = useState(false); // conserta o warning "Did not expect server HTML to contain a <div> in a <div>", ou seja, o client html não coincide com o server html; precisa adicionar um pedaço de state (mounted) e checá-lo com useEffect
+// página muito similar à PropertyAddForm. não será possível, por enquanto, mudar imagens
+
+const PropertyEditForm = () => {
+  const { id } = useParams();
+  const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [fields, setFields] = useState({
-    // pedaço de state para o campo "form" que é um objeto que contém todos campos. boa parte terá uma função "handler"
-    type: '', // tudo aqui reflete diretamente no state
+    type: '',
     name: '',
     description: '',
     location: {
-      // nested properties
       street: '',
       city: '',
       state: '',
@@ -29,21 +34,38 @@ const PropertyAddForm = () => {
       email: '',
       phone: '',
     },
-    images: [],
   });
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     setMounted(true);
+    const fetchPropertyData = async () => {
+      // acontece após a página carregar. pega "property data" para o "form"
+      try {
+        const propertyData = await fetchProperty(id);
+        if (propertyData && propertyData.rates) {
+          // checa valor null a preços; caso tenha, cria uma empty string
+          const defaultRates = { ...propertyData.rates };
+          for (const rate in defaultRates) {
+            if (defaultRates[rate] === null) {
+              defaultRates[rate] = '';
+            }
+          }
+          propertyData.rates = defaultRates;
+        }
+        setFields(propertyData);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPropertyData();
   }, []);
   const handleChange = (e) => {
-    // console.log(e.target.name);
-    // console.log(e.target.value);
     const { name, value } = e.target;
     if (name.includes('.')) {
-      // procura por propriedades aninhadas (rates.weekly)
       const [outerKey, innerKey] = name.split('.');
-      // console.log(outerKey, innerKey); // outer é a 1ª parte do nested property e inner é a 2ª parte do nested property (divididos pelo ponto)
       setFields((prevFields) => ({
-        // atualiza o state
         ...prevFields,
         [outerKey]: {
           ...prevFields[outerKey],
@@ -51,7 +73,6 @@ const PropertyAddForm = () => {
         },
       }));
     } else {
-      // caso não seja um nested property
       setFields((prevFields) => ({
         ...prevFields,
         [name]: value,
@@ -59,49 +80,33 @@ const PropertyAddForm = () => {
     }
   };
   const handleAmenitiesChange = (e) => {
-    const { checked, value } = e.target; // pega checked ao invés de name (checkboxes)
-    const updatedAmenities = [...fields.amenities]; // clona o array atual
+    const { checked, value } = e.target;
+    const updatedAmenities = [...fields.amenities];
     if (checked) {
-      // aciona para todos inputs
-      updatedAmenities.push(value); // adiciona "value" para o array
+      updatedAmenities.push(value);
     } else {
-      const index = updatedAmenities.indexOf(value); // remove "value" do array
+      const index = updatedAmenities.indexOf(value);
       if (index !== -1) {
-        // se "value" não estiver lá, retorna "-1". aqui checa se não tem esse "-1"
-        updatedAmenities.splice(index, 1); // remoção
+        updatedAmenities.splice(index, 1);
       }
     }
     setFields((prevFields) => ({
-      // atualiza o field/state com o array atualizado
       ...prevFields,
       amenities: updatedAmenities,
     }));
   };
-  const handleImageChange = (e) => {
-    const { files } = e.target; // array "files" é criado ao enviar (submit) o form
-    // console.log(files);
-    const updatedImages = [...fields.images]; // clona o atual images array dentro do state (vazio por padrão)
-    for (const file of files) {
-      // adiciona os novos arquivos ao array
-      updatedImages.push(file);
-    }
-    setFields((prevFields) => ({
-      // atualiza state do array "images"
-      ...prevFields,
-      images: updatedImages,
-    }));
-  };
-  /* !!! ESTÁ FALTANDO LOFT (SÓTÃO NO FORM ABAIXO) !!! */
+  const handleSubmit = async () => {};
   return (
-    mounted && (
+    mounted &&
+    !loading && (
       <form
-        action="/api/properties"
+        /* action="/api/properties"
         method="POST"
-        encType="multipart/form-data" // permite upload de imagens
+        encType="multipart/form-data" */
+        onSubmit={handleSubmit}
       >
-        {/* "onSubmit" seria uma alternativa ao "action" com método nessa tag form. está usando "restful routes": faz post request a "/api/properties" e cria um novo imóvel */}
         <h2 className="text-3xl text-center font-semibold mb-6">
-          Adicione o seu imóvel
+          Altere informações de seu imóvel
         </h2>
         <div className="mb-4">
           <label htmlFor="type" className="block text-gray-700 font-bold mb-2">
@@ -262,8 +267,8 @@ const PropertyAddForm = () => {
                 name="amenities"
                 value="Wifi"
                 className="mr-2"
-                checked={fields.amenities.includes('Wifi')} // "includes" precisa ter o nome coincidido com o que está em value
-                onChange={handleAmenitiesChange} // funcionará diferente por lidar com checkboxes
+                checked={fields.amenities.includes('Wifi')}
+                onChange={handleAmenitiesChange}
               />
               <label htmlFor="amenity_wifi">Wi-Fi grátis</label>
             </div>
@@ -543,30 +548,12 @@ const PropertyAddForm = () => {
             onChange={handleChange}
           />
         </div>
-        <div className="mb-4">
-          <label
-            htmlFor="images"
-            className="block text-gray-700 font-bold mb-2"
-          >
-            Fotos (selecione até 4 arquivos)
-          </label>
-          <input
-            type="file"
-            id="images"
-            name="images"
-            className="border rounded w-full py-2 px-3"
-            accept="image/*"
-            multiple
-            onChange={handleImageChange}
-            required // atributo importante
-          />
-        </div>
         <div>
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
             type="submit"
           >
-            Enviar
+            Atualizar
           </button>
         </div>
       </form>
@@ -574,4 +561,4 @@ const PropertyAddForm = () => {
   );
 };
 
-export default PropertyAddForm;
+export default PropertyEditForm;

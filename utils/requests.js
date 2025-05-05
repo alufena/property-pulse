@@ -1,6 +1,6 @@
 // aqui estarão os GET requests de properties por boa prática (DRY)
 
-const apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN || null; // conserta conflitos durante deploy. a variável "API_DOMAIN" não vai estar disponível até o deploy ocorrer, assim, o fetch é malsucedido; se não tiver disponível, seta para null
+const apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN || null; // conserta conflitos durante deploy. a variável "API_DOMAIN" não vai estar disponível até o deploy ocorrer, assim, o fetch seria malsucedido; se não tiver disponível, seta para null
 
 async function fetchProperties() {
     // isso não seria permitido em um client component, mas como aqui é um server component. fetch todos "properties"

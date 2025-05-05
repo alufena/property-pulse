@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import profileDefault from '@/assets/images/profile.png';
 import { useState, useEffect } from 'react';
 import Spinner from '@/components/Spinner';
+import { toast } from 'react-toastify';
 
 const page = () => {
   const { data: session } = useSession();
@@ -39,7 +40,33 @@ const page = () => {
       fetchUserProperties(session.user.id);
     }
   }, [session]);
-  const handleDeleteProperty = () => {};
+  const handleDeleteProperty = async (propertyId) => {
+    // console.log(propertyId);
+    const confirmed = window.confirm(
+      'Você tem certeza de que deseja excluir esse imóvel?'
+    );
+    if (!confirm) return;
+    try {
+      const res = await fetch(`/api/properties/${propertyId}`, {
+        method: 'DELETE',
+      });
+      if (res.status === 200) {
+        const updatedProperties = properties.filter(
+          (property) => property._id !== propertyId
+        ); // remove property do state (UI)
+        setProperties(updatedProperties);
+        // alert('Imóvel deletado');
+        toast.success('Imóvel deletado');
+      } else {
+        // alert('Não foi possível deletar o imóvel');
+        toast.error('Não foi possível deletar o imóvel');
+      }
+    } catch (error) {
+      console.log(error);
+      // alert('Não foi possível deletar o imóvel');
+      toast.error('Não foi possível deletar o imóvel');
+    }
+  };
   return (
     <section className="bg-blue-50">
       <div className="container m-auto py-24">
