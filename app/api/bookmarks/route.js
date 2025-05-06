@@ -5,6 +5,24 @@ import { getSessionUser } from '@/utils/getSessionUser';
 
 export const dynamic = 'force-dynamic'; // corrige problema de deploy que acontece nessa rota que usa "SSR"
 
+export const GET = async () => {
+    // GET request em "/api/bookmarks"
+    try {
+        await connectDB();
+        const sessionUser = await getSessionUser();
+        if (!sessionUser || !sessionUser.userId) {
+            return new Response('User ID is required', { status: 401 });
+        }
+        const { userId } = sessionUser;
+        const user = await User.findOne({ _id: userId });
+        const bookmarks = await Property.find({ _id: { $in: user.bookmarks } }); // pega bookmarks de users em seu próprio array no mongodb e vê se tem um imóvel que coincide com o _id no model Property
+        return new Response(JSON.stringify(bookmarks), { status: 200 });
+    } catch (error) {
+        console.log(error);
+        return new Response('Algo deu errado', { status: 500 });
+    }
+};
+
 export const POST = async (request) => {
     try {
         await connectDB();
