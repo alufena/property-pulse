@@ -37,7 +37,7 @@ const PropertyPage = () => {
   }, [id, property]);
   if (!property && !loading) {
     return (
-      <h1 classNameName="text-center text-2xl font-bold mt-10">
+      <h1 className="text-center text-2xl font-bold mt-10">
         Imóvel não encontrado
       </h1>
     );
@@ -66,8 +66,8 @@ const PropertyPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-70/30 w-full gap-6">
                 <PropertyDetails property={property} />
                 <aside className="space-y-4">
-                  <BookmarkButton property={property} />
                   <ShareButtons property={property} />
+                  <BookmarkButton property={property} />
                   <PropertyContactForm property={property} />
                 </aside>
               </div>
