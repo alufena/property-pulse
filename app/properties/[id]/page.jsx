@@ -56,7 +56,7 @@ const PropertyPage = () => {
               >
                 {/* <i className="fas fa-arrow-left mr-2"></i>  */}
                 <FaArrowLeft className="mr-2" />
-                Voltar a imóveis
+                Voltar
               </Link>
             </div>
           </section>

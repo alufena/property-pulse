@@ -11,7 +11,7 @@ const NotFoundPage = () => {
           </div>
           <div className="text-center">
             <h1 className="text-3xl font-bold mt-4 mb-2">
-              Págin Não Encontrada
+              Erro 404: Página não encontrada
             </h1>
             <p className="text-gray-500 text-xl mb-10">
               A página que você está procurando não existe
@@ -20,7 +20,7 @@ const NotFoundPage = () => {
               href="/"
               className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 px-6 rounded"
             >
-              Voltar à página inicial
+              Voltar
             </Link>
           </div>
         </div>
