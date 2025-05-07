@@ -21,7 +21,7 @@ export const GET = async (request) => {
                 { 'location.zipcode': locationPattern },
             ],
         };
-        if (propertyType && propertyType !== 'All') {
+        if (propertyType && propertyType !== 'Todos') {
             // só checa por tipo de imóvel se não for "Todos"
             const typePattern = new RegExp(propertyType, 'i');
             query.type = typePattern;
