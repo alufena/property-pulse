@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import PropertyCard from './PropertyCard';
 import Spinner from './Spinner';
+import Pagination from './Pagination';
 
 const Properties = () => {
   const [properties, setProperties] = useState([]);
@@ -31,7 +32,10 @@ const Properties = () => {
       }
     };
     fetchProperties();
-  }, []);
+  }, [page, pageSize]); // quando a página muda, aciona todo o hook novamente, faz request ao backend e renderiza a página correta
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
   return loading ? (
     <Spinner />
   ) : (
@@ -47,6 +51,12 @@ const Properties = () => {
             ))}
           </div>
         )}
+        <Pagination
+          page={page}
+          pageSize={pageSize}
+          totalItems={totalItems}
+          onPageChange={handlePageChange} // essa função é lidada no componente pagination como um prop
+        />
       </div>
     </section>
   );
