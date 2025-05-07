@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 const Message = ({ message }) => {
   // message prop
   const [isRead, setIsRead] = useState(message.read);
   const [isDeleted, setIsDeleted] = useState(false);
+  const { setUnreadCount } = useGlobalContext();
   const handleDeleteClick = async () => {
     try {
       const res = await fetch(`/api/messages/${message._id}`, {
@@ -14,6 +16,7 @@ const Message = ({ message }) => {
       });
       if (res.status === 200) {
         setIsDeleted(true);
+        setUnreadCount((prevCount) => prevCount - 1);
         toast.success('Mensagem excluída');
       }
     } catch (error) {
@@ -31,7 +34,8 @@ const Message = ({ message }) => {
       });
       if (res.status === 200) {
         const { read } = await res.json();
-        setIsRead(read);
+        setIsRead(read); // local state
+        setUnreadCount((prevCount) => (read ? prevCount - 1 : prevCount + 1)); // agora ao marcar uma mensagem como lida ou não lida, o número no navbar será automaticamente renovado. agora tudo está conectado
         if (read) {
           toast.success('Marcado como lido');
         } else {

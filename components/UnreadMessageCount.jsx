@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 const UnreadMessageCount = ({ session }) => {
-  const [unreadCount, setUnreadCount] = useState(0); // padrão 0
+  // const [unreadCount, setUnreadCount] = useState(0); // padrão 0
+  const { unreadCount, setUnreadCount } = useGlobalContext(); // desestruturação do valor do provider
   useEffect(() => {
     // precisa fazer um request à rota para exibir o número real de mensagens como notificações
     if (!session) return;
