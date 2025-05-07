@@ -4,15 +4,40 @@ import { getSessionUser } from '@/utils/getSessionUser';
 
 export const dynamic = 'force-dynamic';
 
+export const GET = async () => {
+    // GET request em /api/messages
+    try {
+        await connectDB();
+        const sessionUser = await getSessionUser();
+        if (!sessionUser || !sessionUser.user) {
+            return new Response(JSON.stringify('User ID is required'), {
+                status: 401,
+            });
+        }
+        const { userId } = sessionUser;
+        const messages = await Message.find({ recipient: userId })
+            .populate('sender', 'username')
+            .populate('property', 'name');
+        return new Response(JSON.stringify(messages), { status: 200 });
+    } catch (error) {
+        console.log(error);
+        return new Response('Algo deu errado', { status: 500 });
+    }
+};
+
 export const POST = async (request) => {
     // POST request em /api/messages
     try {
         await connectDB();
-        const { email, phone, message, name, recipient, property } = await request.json();
+        const { email, phone, message, name, recipient, property } =
+            await request.json();
         const sessionUser = await getSessionUser();
         if (!sessionUser || !sessionUser.user) {
             // return new Response('User ID is required', { status: 401 });
-            return new Response(JSON.stringify({ message: 'Entre para enviar uma mensagem' }), { status: 401 })
+            return new Response(
+                JSON.stringify({ message: 'Entre para enviar uma mensagem' }),
+                { status: 401 }
+            );
         }
         const { user } = sessionUser; // pega id junto com tudo de user; nesse caso pega user
         if (user.id === recipient) {
