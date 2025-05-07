@@ -4,8 +4,10 @@ import Link from 'next/link';
 import { fetchProperties } from '@/utils/requests';
 
 const HomeProperties = async () => {
-  const properties = await fetchProperties();
-  const recentProperties = properties
+  // const properties = await fetchProperties();
+  const data = await fetchProperties(); // agora é um objeto com ambos "properties" e "total"
+  // const recentProperties = properties
+  const recentProperties = data.properties
     .sort(() => Math.random() - Math.random())
     .slice(0, 3); // retorna apenas 3 informações do array "properties"
   return (

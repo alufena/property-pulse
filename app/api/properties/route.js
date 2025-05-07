@@ -7,10 +7,19 @@ export const GET = async (request) => {
     // lida automaticamente diferentes requests. pode mudar "GET" para outros tipos ou criar um novo "export const". a rota tratada é "/api/properties"
     try {
         await connectDB();
-        const properties = await Property.find({}); // método "find()" com um objeto vazio significa pegar todas propriedades de "Property"
+        const page = request.nextUrl.searchParams.get('page') || 1; // pega params para início de paginação; a exemplo: localhost:3000/api/properties?page=2&pageSize=3. se não está lá, seta para 1 (página um)
+        const pageSize = request.nextUrl.searchParams.get('pageSize') || 3; // serão 3 listagens de property por página
+        const skip = (page - 1) * pageSize; // permite pular algumas páginas para buscar a especificada. essa expressão algébrica encontra isso
+        const total = await Property.countDocuments({}); // retornará na response. passado um objeto vazio porque não existe restrições/condições (todas properties)
+        // console.log(totalProperties);
+        // const properties = await Property.find({}); // método "find()" com um objeto vazio significa pegar todas propriedades de "Property"
+        const properties = await Property.find({}).skip(skip).limit(pageSize); // pega imóveis que estão na página especificada
         // return new Response('test', { status: 200 });
         // return new Response(JSON.stringify({ message: 'test' }), { status: 200 });
-        return new Response(JSON.stringify(properties), { status: 200 }); // "http://localhost:3000/api/properties" agora pega a informação do DB. precisando agora trazer para o frontend
+        const result = {
+            total, properties
+        }
+        return new Response(JSON.stringify(result), { status: 200 }); // "http://localhost:3000/api/properties" agora pega a informação do DB. precisando agora trazer para o frontend
     } catch (error) {
         console.log(error);
         return new Response('Something Went Wrong', { status: 500 });
@@ -76,7 +85,7 @@ export const POST = async (request) => {
                 // faz request de upload ao cloudinary
                 `data:image/png;base64,${imageBase64}`,
                 {
-                    folder: 'propertypulse' // pasta criada no site oficial da api
+                    folder: 'propertypulse', // pasta criada no site oficial da api
                 }
             );
             imageUploadPromises.push(result.secure_url); // entrega urls
