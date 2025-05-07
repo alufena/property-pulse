@@ -6,6 +6,24 @@ import { toast } from 'react-toastify';
 const Message = ({ message }) => {
   // message prop
   const [isRead, setIsRead] = useState(message.read);
+  const [isDeleted, setIsDeleted] = useState(false);
+  const handleDeleteClick = async () => {
+    try {
+      const res = await fetch(`/api/messages/${message._id}`, {
+        method: 'DELETE', // exclui no mongodb (backend), mas não reflete automaticamente na página, pois precisa recarregá-la (F5). o certo é atualizar um pedaço de state
+      });
+      if (res.status === 200) {
+        setIsDeleted(true);
+        toast.success('Mensagem excluída');
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Algo deu errado');
+    }
+  };
+  if (isDeleted) {
+    return null;
+  }
   const handleReadClick = async () => {
     try {
       const res = await fetch(`/api/messages/${message._id}`, {
@@ -69,7 +87,10 @@ const Message = ({ message }) => {
         >
           {isRead ? 'Marcar como novo' : 'Marcar como lido'}
         </button>
-        <button className="mt-4 bg-red-500 text-white py-1 px-3 rounded-md">
+        <button
+          onClick={handleDeleteClick}
+          className="mt-4 bg-red-500 text-white py-1 px-3 rounded-md"
+        >
           Excluir
         </button>
       </div>

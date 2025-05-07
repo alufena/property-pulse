@@ -33,3 +33,31 @@ export const PUT = async (request, { params }) => {
         return new Response('Algo deu errado', { status: 500 });
     }
 };
+
+export const DELETE = async (request, { params }) => { // DELETE request no mesmo endpoint
+    try {
+        await connectDB();
+        const { id } = params;
+        const sessionUser = await getSessionUser();
+        if (!sessionUser || !sessionUser.user) {
+            return (
+                new Response('User ID is required'),
+                {
+                    status: 401,
+                }
+            );
+        }
+        const { userId } = sessionUser;
+        const message = await Message.findById(id);
+        if (!message) return new Response('Message Not Found', { status: 404 });
+        if (message.recipient.toString() !== userId) {
+            return new Response('Algo deu errado', { status: 401 });
+        }
+        // message.read = !message.read;
+        await message.deleteOne();
+        return new Response('Mensagem excluída', { status: 200 });
+    } catch (error) {
+        console.log(error);
+        return new Response('Algo deu errado', { status: 500 });
+    }
+};
