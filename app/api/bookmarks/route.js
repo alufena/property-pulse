@@ -19,7 +19,7 @@ export const GET = async () => {
         return new Response(JSON.stringify(bookmarks), { status: 200 });
     } catch (error) {
         console.log(error);
-        return new Response('Algo deu errado', { status: 500 });
+        return new Response('Something Went Wrong', { status: 500 });
     }
 };
 

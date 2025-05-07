@@ -20,6 +20,6 @@ export const POST = async (request) => {
         });
     } catch (error) {
         console.log(error);
-        return new Response('Algo deu errado', { status: 500 });
+        return new Response('Something Went Wrong', { status: 500 });
     }
 };

@@ -2,15 +2,18 @@
 
 import { useState } from 'react';
 import { FaPaperPlane } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 const PropertyContactForm = ({ property }) => {
   // prop "property" pego de "\app\properties\[id]\page.jsx"
+  const { data: session } = useSession();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [phone, setPhone] = useState('');
   const [wasSubmitted, setWasSubmitted] = useState(false);
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       name,
@@ -20,13 +23,42 @@ const PropertyContactForm = ({ property }) => {
       recipient: property.owner,
       property: property._id,
     };
-    console.log(data);
-    setWasSubmitted(true);
+    // console.log(data);
+    // setWasSubmitted(true);
+    try {
+      const res = await fetch('/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      if (res.status === 200) {
+        toast.success('Mensagem enviada');
+        setWasSubmitted(true);
+      } else if (res.status === 400 || res.status === 401) {
+        const dataObj = await res.json();
+        toast.error(dataObj.message); // pega mensagem da rota
+      } else {
+        toast.error('Algo deu errado');
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Algo deu errado');
+    } finally {
+      // limpa os campos
+      setName('');
+      setEmail('');
+      setPhone('');
+      setMessage('');
+    }
   };
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
       <h3 className="text-xl font-bold mb-6">Contato</h3>
-      {wasSubmitted ? (
+      {!session ? (
+        <p>Entre para entrar em contato</p>
+      ) : wasSubmitted ? (
         <p className="text-green-500 mb-4">Mensagem enviada</p>
       ) : (
         <form onSubmit={handleSubmit}>

@@ -13,7 +13,7 @@ export const GET = async (request) => {
         return new Response(JSON.stringify(properties), { status: 200 }); // "http://localhost:3000/api/properties" agora pega a informação do DB. precisando agora trazer para o frontend
     } catch (error) {
         console.log(error);
-        return new Response('Algo deu errado', { status: 500 });
+        return new Response('Something Went Wrong', { status: 500 });
     }
 };
 
