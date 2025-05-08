@@ -9,7 +9,7 @@ const override = {
 const LoadingPage = ({ loading }) => {
   return (
     <ClipLoader
-      // color={color} teste
+      // color={color}
       color="#3b82f6"
       loading={loading}
       cssOverride={override}
