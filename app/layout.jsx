@@ -14,7 +14,7 @@ export const metadata = {
   title: 'ImobiFlux encontre o seu aluguel perfeito', // influencia a aba do navegador
   description: 'Encontre o imóvel dos seus sonhos para alugar',
   keywords:
-    'rental, find rentals, find properties, aluguel, encontrar aluguéis, encontrar propriedades,',
+    'rental, find rentals, find properties, aluguel, encontrar aluguéis, encontrar propriedades',
 };
 
 const MainLayout = ({
