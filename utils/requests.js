@@ -2,7 +2,7 @@
 
 const apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN || null; // conserta conflitos durante deploy. a variável "API_DOMAIN" não vai estar disponível até o deploy ocorrer, assim, o fetch seria malsucedido; se não tiver disponível, seta para null
 
-async function fetchProperties() {
+async function fetchProperties({ showFeatured = false } = {}) {
     // isso não seria permitido em um client component, mas como aqui é um server component. fetch todos "properties"
     try {
         // const res = await fetch('http://localhost:3000/api/properties'); // por ser a partir do servidor, precisa incluir um domínio
@@ -11,7 +11,10 @@ async function fetchProperties() {
             // lida a situação de quando o domínio ainda não estiver disponível
             return [];
         }
-        const res = await fetch(`${apiDomain}/properties`, { cache: 'no-store' }); // esse 2º arg "cache" serve para carregar diretamente os dados recém-enviados à página "properties/add", dispensando o uso de F5
+        const res = await fetch(
+            `${apiDomain}/properties${showFeatured ? '/featured' : ''}`,
+            { cache: 'no-store' }
+        ); // esse 2º arg "cache" serve para carregar diretamente os dados recém-enviados à página "properties/add", dispensando o uso de F5
         if (!res.ok) {
             throw new Error('Algo deu errado');
         }
