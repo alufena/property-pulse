@@ -7,6 +7,7 @@ import AuthProvider from '@/components/AuthProvider';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { GlobalProvider } from '@/context/GlobalContext';
+import 'photoswipe/dist/photoswipe.css';
 
 export const metadata = {
   // as páginas estão server side (react components no servidor), estão sendo renderizadas no server. abaixo são keywords para SEO. fazer isso aqui (layout.jsx) afeta todas as páginas do projeto
