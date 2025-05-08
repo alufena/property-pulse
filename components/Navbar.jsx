@@ -124,7 +124,7 @@ const Navbar = () => {
                       pathname === '/properties/add' ? 'bg-black' : ''
                     } text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2`}
                   >
-                    Adicionar imóvel
+                    Criar listagem
                   </Link>
                 )}
               </div>
@@ -197,7 +197,6 @@ const Navbar = () => {
                       className="h-8 w-8 rounded-full"
                       // src={profileDefault}
                       src={profileImage || profileDefault}
-                      alt=""
                       width={40} // 1ª parte do conserto do erro width property aqui e com "height={40}"; a parte final se encontra no arquivo "next.config.mjs"
                       height={40}
                     />
@@ -292,7 +291,7 @@ const Navbar = () => {
                   pathname === '/properties/add' ? 'bg-black' : ''
                 } text-white block rounded-md px-3 py-2 text-base font-medium`}
               >
-                Adicionar imóvel
+                Criar listagem
               </Link>
             )}
             {/* {!isLoggedIn && ( */}

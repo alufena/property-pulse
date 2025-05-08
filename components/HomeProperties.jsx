@@ -29,14 +29,14 @@ const HomeProperties = async () => {
         </div>
       </section>
       {/* envoltado em fragment porque jsx só permite retornar um único parent element */}
-      <section className="m-auto max-w-lg my-10 px-6">
+      {/*       <section className="m-auto max-w-lg my-10 px-6">
         <Link
           href="/properties"
           className="block bg-black text-white text-center py-4 px-6 rounded-xl hover:bg-gray-700"
         >
           Ver todos imóveis
         </Link>
-      </section>
+      </section> */}
     </>
   );
 };

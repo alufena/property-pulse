@@ -22,7 +22,6 @@ const PropertyImages = ({ images }) => {
                   width={1800}
                   height={400}
                   priority={true}
-                  alt=""
                 />
               )}
             </Item>
@@ -55,7 +54,6 @@ const PropertyImages = ({ images }) => {
                         sizes="100vw"
                         ref={ref}
                         onClick={open}
-                        alt=""
                       />
                     )}
                   </Item>

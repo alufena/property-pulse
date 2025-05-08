@@ -107,15 +107,16 @@ const ProfilePage = () => {
                         className="h-32 w-full rounded-md object-cover"
                         // src="/images/properties/b1.jpg"
                         src={property.images[0]}
-                        alt=""
                         width={500}
                         height={100}
                         priority={true}
                       />
                     </Link>
                     <div className="mt-2">
-                      <p className="text-lg font-semibold">{property.name}</p>
-                      <p className="text-gray-600">
+                      <p className="text-lg font-semibold break-words whitespace-pre-wrap">
+                        {property.name}
+                      </p>
+                      <p className="text-gray-600 break-words whitespace-pre-wrap">
                         Endereço: {property.location.street}{' '}
                         {property.location.city} {property.location.state}
                       </p>

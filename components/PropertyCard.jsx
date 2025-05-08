@@ -22,13 +22,25 @@ const PropertyCard = ({ property }) => {
   const getBedDisplay = () => (property.beds === 1 ? 'cama' : 'camas');
   const getBathDisplay = () =>
     property.baths === 1 ? 'banheiro' : 'banheiros';
+  const getTypeDisplay = () => {
+    const types = {
+      Apartment: 'Apartamento',
+      Studio: 'Estúdio',
+      Condo: 'Condomínio',
+      House: 'Casa',
+      'Cabin Or Cottage': 'Cabana ou chalé',
+      Loft: 'Sótão',
+      Room: 'Quarto',
+      Other: 'Outros',
+    };
+    return types[property.type] || property.type;
+  };
   return (
     <div className="rounded-xl shadow-md relative">
       <Image
         // src="/images/properties/a1.jpg" // adicionado "/" no início da "src". aqui é conteúdo hardcoded
         // src={`/images/properties/${property.images[0]}`} // array de imagens vindo de properties.json
         src={property.images[0]} // exibe as URLs vindas de cloudinary
-        alt=""
         className="w-full h-auto rounded-t-xl"
         width={0} // "width", "height" e "sizes" consertam erros relacionados à substituição dessa tag "img" pelo componente "Image"
         height={0}
@@ -36,8 +48,10 @@ const PropertyCard = ({ property }) => {
       />
       <div className="p-4">
         <div className="text-left md:text-center lg:text-left mb-6">
-          <div className="text-gray-600">{property.type}</div>
-          <h3 className="text-xl font-bold">{property.name}</h3>
+          <div className="text-gray-600">{getTypeDisplay()}</div>
+          <h3 className="text-xl font-bold break-words whitespace-pre-wrap">
+            {property.name}
+          </h3>
         </div>
         <h3 className="absolute top-[10px] right-[10px] bg-white px-4 py-2 rounded-lg text-blue-500 font-bold text-right md:text-center lg:text-right">
           {/* $4,200/mo */} {/* ${property.rates.monthly} */}
@@ -87,16 +101,16 @@ const PropertyCard = ({ property }) => {
           <div className="flex align-middle gap-2 mb-4 lg:mb-0">
             <FaMapMarker className="text-orange-700 mt-1" />
             {/* <i className="fa-solid fa-location-dot text-lg text-orange-700"></i> */}
-            <span className="text-orange-700">
+            <span className="text-orange-700 break-words whitespace-pre-wrap max-w-xs md:max-w-sm lg:max-w-md">
               {property.location.city} {property.location.state}
             </span>
           </div>
           <Link
             // href="property.html"
             href={`/properties/${property._id}`}
-            className="h-[36px] bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-center text-sm"
+            className="inline-block h-[36px] min-w-[120px] bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg text-center text-sm whitespace-nowrap"
           >
-            Mais informações
+            Mais detalhes
           </Link>
         </div>
       </div>

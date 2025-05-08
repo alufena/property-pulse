@@ -59,7 +59,9 @@ const Message = ({ message }) => {
           <span className="font-bold">Consulta sobre propriedade: </span>
           {message.property.name}
         </h2>
-        <p className="text-gray-700">{message.body}</p>
+        <p className="text-gray-700 break-words whitespace-pre-wrap">
+          {message.body}
+        </p>
         <ul className="mt-4">
           <li>
             <strong>Nome: </strong>
@@ -89,7 +91,7 @@ const Message = ({ message }) => {
             isRead ? 'bg-gray-300' : 'bg-blue-500 text-white'
           } py-1 px-3 rounded-md`}
         >
-          {isRead ? 'Marcar como novo' : 'Marcar como lido'}
+          {isRead ? 'Marcar como não lido' : 'Marcar como lido'}
         </button>
         <button
           onClick={handleDeleteClick}
